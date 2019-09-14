@@ -6,7 +6,11 @@
 
 
 /* Funções Auxiliares */
-void storeLong(void *p, long n, BigInt res){ /*passa o signed int para os primeiros 8 índices do BigInt*/
+
+
+
+void storeLong(void *p, long n, BigInt res){
+ /*passa o signed int para os primeiros 8 índices do BigInt*/
 	unsigned char *p1 = p;
 	unsigned char *p2 = res;
 	int i = 0;
@@ -57,11 +61,23 @@ void big_mul(BigInt res, BigInt a, BigInt b);
 
 /* res = a << n */
 void big_shl(BigInt res, BigInt a, int n){
+	unsigned char *p = res;
+	unsigned char *temp1 = a;
+	unsigned char x = *temp1;
+	unsigned char y;
+	int i;
 
-
-
-
-	
+	x = x>>(8-n);  /*guarda os bits que vao para o proximo indice do array*/
+	*p = (*temp1<<n);
+	temp1 ++;
+	p ++;
+	for(i = 1; i < 16; i ++){
+		y = x;
+		x = *temp1;
+		x = x>>(8-n);
+		*p = ((*temp1<<n) | y);
+		p++; temp1 ++;
+	}
 }
 
 /* res = a >> n (lógico)*/
