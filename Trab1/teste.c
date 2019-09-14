@@ -37,5 +37,23 @@ int main(void){
 	printf("SHIFT LEFT 3:\n");
 	big_shl(res, a, 3);
 	printRes(res);
+
+	printf("\n\n\n");
+	printf("/***************************/\n");
+	printf("\n\n\n");
+
+	//Teste de big_shr
+	printf("TESTE DE big_shr:\n");
+	printf("Valor de 'a':\n");
+	printRes(a);
+	printf("SHIFT LEFT 1:\n");
+	big_shr(res, a, 1);
+	printRes(res);
+	printf("SHIFT LEFT 3:\n");
+	big_shr(res, a, 3);
+	printRes(res);
+
+
+
 	return 0;
 }

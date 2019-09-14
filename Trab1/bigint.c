@@ -81,7 +81,25 @@ void big_shl(BigInt res, BigInt a, int n){
 }
 
 /* res = a >> n (lógico)*/
-void big_shr(BigInt res, BigInt a, int n);
+void big_shr(BigInt res, BigInt a, int n){
+	unsigned char *p = res+15;
+	unsigned char *temp1 = a+15;
+	unsigned char x = *temp1;
+	unsigned char y;
+	int i;
+
+	x = x<<(8-n);  /*guarda os bits que vao para o proximo indice do array*/
+	*p = (*temp1>>n);
+	temp1 --;
+	p --;
+	for(i = 1; i < 16; i ++){
+		y = x;
+		x = *temp1;
+		x = x<<(8-n);
+		*p = ((*temp1>>n) | y);
+		p--; temp1 --;
+	}
+}
 
 /* res = a >> n (aritmético)*/
 void big_sar(BigInt res, BigInt a, int n);
