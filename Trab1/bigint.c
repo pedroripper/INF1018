@@ -7,6 +7,12 @@
 
 /* Funções Auxiliares */
 
+void printtest(BigInt res){
+/*Imprime a resposta da questao*/
+	for(int i = 15; i >= 0; i --)
+		printf("%02x ", res[i]);
+	printf("\n");
+}
 
 
 void storeLong(void *p, long n, BigInt res){
@@ -61,44 +67,24 @@ void big_mul(BigInt res, BigInt a, BigInt b);
 
 /* res = a << n */
 void big_shl(BigInt res, BigInt a, int n){
-	unsigned char *p = res;
-	unsigned char *temp1 = a;
-	unsigned char x = *temp1;
-	unsigned char y;
-	int i;
+	int i, e, ant = 0;
+	long val;
 
-	x = x>>(8-n);  /*guarda os bits que vao para o proximo indice do array*/
-	*p = (*temp1<<n);
-	temp1 ++;
-	p ++;
-	for(i = 1; i < 16; i ++){
-		y = x;
-		x = *temp1;
-		x = x>>(8-n);
-		*p = ((*temp1<<n) | y);
-		p++; temp1 ++;
+	for(i = 0; i < 16; i ++){
+		val = a[i];
+		for(e=0;e<n;e++){val = val*2;}
+		val+=ant;
+		res[i] = val%256;
+		ant = val/256;
 	}
+	return;
 }
 
 /* res = a >> n (lógico)*/
 void big_shr(BigInt res, BigInt a, int n){
-	unsigned char *p = res+15;
-	unsigned char *temp1 = a+15;
-	unsigned char x = *temp1;
-	unsigned char y;
-	int i;
 
-	x = x<<(8-n);  /*guarda os bits que vao para o proximo indice do array*/
-	*p = (*temp1>>n);
-	temp1 --;
-	p --;
-	for(i = 1; i < 16; i ++){
-		y = x;
-		x = *temp1;
-		x = x<<(8-n);
-		*p = ((*temp1>>n) | y);
-		p--; temp1 --;
-	}
+
+
 }
 
 /* res = a >> n (aritmético)*/

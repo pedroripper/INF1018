@@ -31,8 +31,8 @@ int main(void){
 	printf("TESTE DE big_shl:\n");
 	printf("Valor de 'a':\n");
 	printRes(a);
-	printf("SHIFT LEFT 1:\n");
-	big_shl(res, a, 1);
+	printf("SHIFT LEFT 16:\n");
+	big_shl(res, a, 16);
 	printRes(res);
 	printf("SHIFT LEFT 3:\n");
 	big_shl(res, a, 3);
