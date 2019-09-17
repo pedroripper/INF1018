@@ -105,7 +105,7 @@ void big_shr(BigInt res, BigInt a, int n){
 		}
 		val = val | ant;
 		res[i] = val;  
-		ant = prox/256;
+		ant = prox/(pow(2,(n%8)-1));
 		prox = 0;
 
  }
