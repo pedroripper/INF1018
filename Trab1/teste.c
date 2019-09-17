@@ -46,12 +46,10 @@ int main(void){
 	printf("TESTE DE big_shr:\n");
 	printf("Valor de 'a':\n");
 	printRes(a);
-	printf("SHIFT LEFT 1:\n");
+	printf("SHIFT RIGHT LOGICO 1:\n");
 	big_shr(res, a, 1);
 	printRes(res);
-	printf("SHIFT LEFT 3:\n");
-	big_shr(res, a, 3);
-	printRes(res);
+
 
 
 
