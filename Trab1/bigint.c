@@ -14,6 +14,17 @@ void printtest(BigInt res){
 	printf("\n");
 }
 
+void shiftRL(BigInt res, BigInt a, int n){
+	int nBytes = n/8;
+	for(int i = 0; i+nBytes < 16; i ++){
+		res[i] = a[i+nBytes];
+	}
+	while(nBytes){
+		res[16-nBytes] = 0x00;
+		nBytes --; 
+	}
+}
+
 
 void storeLong(void *p, long n, BigInt res){
  /*passa o signed int para os primeiros 8 índices do BigInt*/
@@ -82,27 +93,22 @@ void big_shl(BigInt res, BigInt a, int n){
 
 /* res = a >> n (lógico)*/
 void big_shr(BigInt res, BigInt a, int n){
+	shiftRL(res, a, n);
 	int i, e, ant = 0, prox = 0;
 	unsigned char val;
-
 	for(i = 15; i >= 0	; i --){
-		val = a[i];
-		for(e=0;e<n;e++){
+		val = res[i];
+		for(e=0;e<n%8;e++){
 			prox += (val%2)*pow(2,7-e);
-			//printf("VALOR QUE VAI PRO %d :%d\n", i-1, prox);
+			//printf("valor do prox %d : %d\n", i, prox);
 			val = val>>1;
 		}
-	//	printf("%02x VALORN ANT \n", ant);
 		val = val | ant;
 		res[i] = val;  
-	//	printf("valor de %d     %02x\n", i, res[i]);
-		ant = prox;
+		ant = prox/256;
 		prox = 0;
 
-	}
-	return;
-
- 
+ }
 }
 
 /* res = a >> n (aritmético)*/
