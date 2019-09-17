@@ -82,26 +82,23 @@ void big_shl(BigInt res, BigInt a, int n){
 
 /* res = a >> n (lógico)*/
 void big_shr(BigInt res, BigInt a, int n){
-	int i, e, ant = 0;
-	unsigned char prox = 0;
-	long val;
+	int i, e, ant = 0, prox = 0;
+	unsigned char val;
 
-	for(i = 15; i >= 0; i --){
+	for(i = 15; i >= 0	; i --){
 		val = a[i];
-		printf("val antes: %02lx\n", val);
 		for(e=0;e<n;e++){
-			if(val & 0x0000000000000001){
-				prox += 1*pow(2,8-e);
-				printf("tamo junto %d\n", prox);
-			}
-			val = val/2;
+			prox += (val%2)*pow(2,7-e);
+			//printf("VALOR QUE VAI PRO %d :%d\n", i-1, prox);
+			val = val>>1;
 		}
+	//	printf("%02x VALORN ANT \n", ant);
 		val = val | ant;
-		printf("antes da merda acontecer %02lx\n", val);
-		res[i] = val;
-		printf("valor pra res[%d]: %02x\n", i, res[i]);
+		res[i] = val;  
+	//	printf("valor de %d     %02x\n", i, res[i]);
 		ant = prox;
 		prox = 0;
+
 	}
 	return;
 
