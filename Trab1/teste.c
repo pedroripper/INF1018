@@ -10,6 +10,7 @@ void printRes(BigInt res){
 
 int main(void){
 	BigInt res;
+	BigInt negA = {0xAE, 0x01, 0x11, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80};
 	BigInt a = {0xAE, 0x01, 0x11, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 	//Teste de big_val
 	printf("TESTE DE big_val:\n");
@@ -48,6 +49,19 @@ int main(void){
 	big_shr(res, a, 7);
 	printRes(res);
 
+
+
+	printf("\n\n\n");
+	printf("/***************************/\n");
+	printf("\n\n\n");
+
+	//Teste de big_sar
+	printf("TESTE DE big_sar:\n");
+	printf("Valor de 'a':\n");
+	printRes(negA);
+	printf("SHIFT RIGHT ARITMETICO 17:\n");
+	big_sar(res, negA, 17);
+	printRes(res);
 
 
 

@@ -1,4 +1,4 @@
-/* Nome_do_Aluno1 Matricula Turma */
+/* Gabriel Arantes Cortines Coelho 1611860 3WB */
 /* Pedro da Silveira Carvalho Ripper 1910954 3WB */
 
 #include <stdio.h>
@@ -14,7 +14,22 @@ void printtest(BigInt res){
 	printf("\n");
 }
 
-void shiftRL(BigInt res, BigInt a, int n){
+void placeBits(BigInt res, int n){
+	int e = 0;
+	int nBytes = n/8;
+	int nBits = n%8;
+	while(nBits){
+		res[15-nBytes] += pow(2,7-e);
+		e++;
+		nBits --;
+	}
+	while(nBytes){
+		res[16-nBytes] = 0XFF;
+		nBytes --; 
+	}
+}
+
+void shiftR(BigInt res, BigInt a, int n){
 	int nBytes = n/8;
 	for(int i = 0; i+nBytes < 16; i ++){
 		res[i] = a[i+nBytes];
@@ -93,7 +108,7 @@ void big_shl(BigInt res, BigInt a, int n){
 
 /* res = a >> n (lógico)*/
 void big_shr(BigInt res, BigInt a, int n){
-	shiftRL(res, a, n);
+	shiftR(res, a, n);
 	int i, e, ant = 0, prox = 0;
 	unsigned char val;
 	for(i = 15; i >= 0	; i --){
@@ -112,4 +127,26 @@ void big_shr(BigInt res, BigInt a, int n){
 }
 
 /* res = a >> n (aritmético)*/
-void big_sar(BigInt res, BigInt a, int n);
+void big_sar(BigInt res, BigInt a, int n){
+	if(a[15] & 0x80){
+		shiftR(res, a, n);
+		int i, e, ant = 0, prox = 0;
+		unsigned char val;
+		for(i = 15; i >= 0	; i --){
+			val = res[i];
+			for(e=0;e<n%8;e++){
+				prox += (val%2)*pow(2,7-e);
+				val = val>>1;
+			}
+			val = val | ant;
+			res[i] = val;  
+			ant = prox/(pow(2,(n%8)-1));
+			prox = 0;
+
+ 			}
+ 			placeBits(res, n);
+	}
+	else{
+		big_shr(res,a,n);
+	}
+}
