@@ -22,16 +22,7 @@ void opBits(BigInt res, BigInt a){
 	}
 }
 
-void negToPos(BigInt res, BigInt a){
-	res[0] = a[0] & 0xFE;
-	opBits(res,a);
-}
 
-void posToNeg(BigInt res, BigInt a){
-	opBits(res, a);
-	res[0] = res[0] | 0x01;
-
-}
 
 void placeBits(BigInt res, int n){
 	int e = 0;
@@ -96,18 +87,37 @@ void big_val (BigInt res, long val){
 
 /* Operações Aritméticas */
 
-/* res = -a */
-void big_comp2(BigInt res, BigInt a){
-	if(a[15] & 0x80){
-		negToPos(res, a);
-	}
-	else{
-		posToNeg(res,a);
+
+
+/* res = a + b */
+void big_sum(BigInt res, BigInt a, BigInt b){
+	unsigned char *pA, *pB, *pRes;
+	pA = a; pB = b; pRes = res;
+	int prox = 0;
+	long val;
+	int i;
+	for(i = 0; i < 15; i ++){
+		val = *pA + *pB + prox;
+		*pRes = val%256;
+		prox = val/256;
+		pRes ++; pA ++; pB ++;
 	}
 }
 
-/* res = a + b */
-void big_sum(BigInt res, BigInt a, BigInt b);
+
+/* res = -a */
+void big_comp2(BigInt res, BigInt a){
+	BigInt one = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+	if(a[15] & 0x80){
+		big_sum(res, a, one);
+		opBits(res, a);
+	}
+	else{
+		opBits(res, a);
+		big_sum(res, a, one);
+	}
+}
+
 
 /* res = a - b */
 void big_sub(BigInt res, BigInt a, BigInt b);
