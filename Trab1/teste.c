@@ -63,6 +63,14 @@ int main(void){
 	big_sar(res, negA, 17);
 	printRes(res);
 
+	//Teste de big_comp2
+	printf("TESTE DE big_comp2:\n");
+	printf("Valor de 'a':\n");
+	printRes(a);
+	printf("-a:\n");
+	big_comp2(res, a);
+	printRes(res);
+
 
 
 	return 0;

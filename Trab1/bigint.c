@@ -14,6 +14,25 @@ void printtest(BigInt res){
 	printf("\n");
 }
 
+void opBits(BigInt res, BigInt a){
+	//troca os bytes pelos seus complementos
+	int i;
+	for(i = 0; i < 16; i ++){
+		res[i] = ~(a[i]); 
+	}
+}
+
+void negToPos(BigInt res, BigInt a){
+	res[0] = a[0] & 0xFE;
+	opBits(res,a);
+}
+
+void posToNeg(BigInt res, BigInt a){
+	opBits(res, a);
+	res[0] = res[0] | 0x01;
+
+}
+
 void placeBits(BigInt res, int n){
 	int e = 0;
 	int nBytes = n/8;
@@ -78,7 +97,14 @@ void big_val (BigInt res, long val){
 /* Operações Aritméticas */
 
 /* res = -a */
-void big_comp2(BigInt res, BigInt a);
+void big_comp2(BigInt res, BigInt a){
+	if(a[15] & 0x80){
+		negToPos(res, a);
+	}
+	else{
+		posToNeg(res,a);
+	}
+}
 
 /* res = a + b */
 void big_sum(BigInt res, BigInt a, BigInt b);
