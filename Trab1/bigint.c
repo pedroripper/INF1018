@@ -18,7 +18,10 @@ void opBits(BigInt res, BigInt a){
 	//troca os bytes pelos seus complementos
 	int i;
 	for(i = 0; i < 16; i ++){
+		//printf("a[%d]: %02x\n", i, a[i]);
 		res[i] = ~(a[i]); 
+		//printf("res[%d]: %02x\n", i, res[i]);
+
 	}
 }
 
@@ -96,7 +99,7 @@ void big_sum(BigInt res, BigInt a, BigInt b){
 	int prox = 0;
 	long val;
 	int i;
-	for(i = 0; i < 15; i ++){
+	for(i = 0; i < 16; i ++){
 		val = *pA + *pB + prox;
 		*pRes = val%256;
 		prox = val/256;
@@ -107,10 +110,11 @@ void big_sum(BigInt res, BigInt a, BigInt b){
 
 /* res = -a */
 void big_comp2(BigInt res, BigInt a){
-	BigInt one = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+	BigInt one = {0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 	if(a[15] & 0x80){
-		big_sum(res, a, one);
 		opBits(res, a);
+		big_sum(res, res, one);
+
 	}
 	else{
 		opBits(res, a);
