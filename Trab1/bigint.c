@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include "bigint.h" 
-#include <math.h>
+
 
 /* Funções Auxiliares */
 
@@ -12,6 +12,15 @@ void printtest(BigInt res){
 	for(int i = 15; i >= 0; i --)
 		printf("%02x ", res[i]);
 	printf("\n");
+}
+
+int pot(int x, int y){
+	int p = 1;
+	while(y){
+		p = p*x;
+		y --;
+	}
+	return p;
 }
 
 void opBits(BigInt res, BigInt a){
@@ -32,7 +41,7 @@ void placeBits(BigInt res, int n){
 	int nBytes = n/8;
 	int nBits = n%8;
 	while(nBits){
-		res[15-nBytes] += pow(2,7-e);
+		res[15-nBytes] += pot(2,7-e);
 		e++;
 		nBits --;
 	}
@@ -154,13 +163,13 @@ void big_shr(BigInt res, BigInt a, int n){
 	for(i = 15; i >= 0	; i --){
 		val = res[i];
 		for(e=0;e<n%8;e++){
-			prox += (val%2)*pow(2,7-e);
+			prox += (val%2)*pot(2,7-e);
 			//printf("valor do prox %d : %d\n", i, prox);
 			val = val>>1;
 		}
 		val = val | ant;
 		res[i] = val;  
-		ant = prox/(pow(2,(n%8)-1));
+		ant = prox/(pot(2,(n%8)-1));
 		prox = 0;
 
  }
@@ -175,12 +184,12 @@ void big_sar(BigInt res, BigInt a, int n){
 		for(i = 15; i >= 0	; i --){
 			val = res[i];
 			for(e=0;e<n%8;e++){
-				prox += (val%2)*pow(2,7-e);
+				prox += (val%2)*pot(2,7-e);
 				val = val>>1;
 			}
 			val = val | ant;
 			res[i] = val;  
-			ant = prox/(pow(2,(n%8)-1));
+			ant = prox/(pot(2,(n%8)-1));
 			prox = 0;
 
  			}
