@@ -26,10 +26,10 @@ int pot(int x, int y){
 void opBits(BigInt res, BigInt a){
 	//troca os bytes pelos seus complementos
 	int i;
+	unsigned char *p = res;
 	for(i = 0; i < 16; i ++){
-		//printf("a[%d]: %02x\n", i, a[i]);
-		res[i] = ~(a[i]); 
-		//printf("res[%d]: %02x\n", i, res[i]);
+		*p = ~(a[i]);
+		p++;
 
 	}
 }
@@ -127,13 +127,17 @@ void big_comp2(BigInt res, BigInt a){
 	}
 	else{
 		opBits(res, a);
-		big_sum(res, a, one);
+		big_sum(res, res, one);
 	}
 }
 
 
 /* res = a - b */
-void big_sub(BigInt res, BigInt a, BigInt b);
+void big_sub(BigInt res, BigInt a, BigInt b){
+	BigInt negB;
+	big_comp2(negB, b);
+	big_sum(res, a, negB);
+}
 
 /* res = a * b */
 void big_mul(BigInt res, BigInt a, BigInt b);
