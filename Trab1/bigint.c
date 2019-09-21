@@ -140,7 +140,24 @@ void big_sub(BigInt res, BigInt a, BigInt b){
 }
 
 /* res = a * b */
-void big_mul(BigInt res, BigInt a, BigInt b);
+void big_mul(BigInt res, BigInt a, BigInt b){
+    int atual, mod = 8;
+    BigInt shi;
+    
+    big_val(res, 0);
+    for(atual=0;atual<16;atual++){
+        if(b[atual]&0x01){big_shl(shi,a,0+atual*mod);big_sum(res,res,shi);}
+        if(b[atual]&0x02){big_shl(shi,a,1+atual*mod);big_sum(res,res,shi);}
+        if(b[atual]&0x04){big_shl(shi,a,2+atual*mod);big_sum(res,res,shi);}
+        if(b[atual]&0x08){big_shl(shi,a,3+atual*mod);big_sum(res,res,shi);}
+        if(b[atual]&0x10){big_shl(shi,a,4+atual*mod);big_sum(res,res,shi);}
+        if(b[atual]&0x20){big_shl(shi,a,5+atual*mod);big_sum(res,res,shi);}
+        if(b[atual]&0x40){big_shl(shi,a,6+atual*mod);big_sum(res,res,shi);}
+        if(b[atual]&0x80){big_shl(shi,a,7+atual*mod);big_sum(res,res,shi);}
+    }
+    return;
+}
+
 
 /* Operações de Deslocamento */
 
@@ -162,6 +179,8 @@ void big_shl(BigInt res, BigInt a, int n){
 /* res = a >> n (lógico)*/
 void big_shr(BigInt res, BigInt a, int n){
 	shiftR(res, a, n);
+	if(n%8 == 0)
+		return;
 	int i, e, ant = 0, prox = 0;
 	unsigned char val;
 	for(i = 15; i >= 0	; i --){
@@ -183,6 +202,10 @@ void big_shr(BigInt res, BigInt a, int n){
 void big_sar(BigInt res, BigInt a, int n){
 	if(a[15] & 0x80){
 		shiftR(res, a, n);
+			if(n%8 == 0){
+				placeBits(res, n);
+				return;
+			}
 		int i, e, ant = 0, prox = 0;
 		unsigned char val;
 		for(i = 15; i >= 0	; i --){
