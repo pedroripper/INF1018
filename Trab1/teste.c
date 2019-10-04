@@ -26,8 +26,8 @@ int main(void){
 
 	//Teste de big_val
 	printf("TESTE DE big_val:\n");
-	printf("Signed long: %02x\n", 10);
-	big_val(res, 10);
+	printf("Signed long: %02lx\n", 9223372036854775807);
+	big_val(res, 9223372036854775807);
 	printf("Extendido para 128 bits:\n");
 	printRes(res);
 	printf("TESTE DE big_val:\n");

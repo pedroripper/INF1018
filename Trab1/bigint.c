@@ -35,7 +35,7 @@ void placeBits(BigInt res, int n){
 	int nBytes = n/8;
 	int nBits = n%8;
 	while(nBits){
-		res[15-nBytes] += pot(2,7-e);
+		res[15-nBytes] = res[15-nBytes] | 2<<(7-e);
 		e++;
 		nBits --;
 	}
@@ -75,7 +75,7 @@ void big_val (BigInt res, long val){
 	int i;
 	unsigned char *p = res+8;
 	//checagem se val é positivo ou negativo
-	if(val & 0x80000000){
+	if(val & 0x8000000000000000){
 		for(i = 8; i < 16; i ++){
 			*p = 0xFF;
 			p ++;
