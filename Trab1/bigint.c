@@ -1,3 +1,4 @@
+ 
 /* Gabriel Arantes Cortines Coelho 1611860 3WB */
 /* Pedro da Silveira Carvalho Ripper 1910954 3WB */
 
@@ -14,14 +15,7 @@ void printtest(BigInt res){
 	printf("\n");
 }
 
-int pot(int x, int y){
-	int p = 1;
-	while(y){
-		p = p*x;
-		y --;
-	}
-	return p;
-}
+
 
 void opBits(BigInt res, BigInt a){
 	//troca os bytes pelos seus complementos
@@ -103,16 +97,13 @@ void big_val (BigInt res, long val){
 
 /* res = a + b */
 void big_sum(BigInt res, BigInt a, BigInt b){
-	unsigned char *pA, *pB, *pRes;
-	pA = a; pB = b; pRes = res;
-	int prox = 0;
-	long val;
+	char prox = 0;
+	short val;
 	int i;
 	for(i = 0; i < 16; i ++){
-		val = *pA + *pB + prox;
-		*pRes = val%256;
-		prox = val/256;
-		pRes ++; pA ++; pB ++;
+		val = a[i] + b[i] + prox;
+		res[i] = val;
+		prox = val>>8;
 	}
 }
 
@@ -120,15 +111,9 @@ void big_sum(BigInt res, BigInt a, BigInt b){
 /* res = -a */
 void big_comp2(BigInt res, BigInt a){
 	BigInt one = {0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-	if(a[15] & 0x80){
-		opBits(res, a);
-		big_sum(res, res, one);
 
-	}
-	else{
-		opBits(res, a);
-		big_sum(res, res, one);
-	}
+	opBits(res, a);
+	big_sum(res, res, one);
 }
 
 
@@ -142,19 +127,24 @@ void big_sub(BigInt res, BigInt a, BigInt b){
 /* res = a * b */
 void big_mul(BigInt res, BigInt a, BigInt b){
     int atual, mod = 8;
-    BigInt shi;
+    BigInt shi, b_c;
+    
+	if(b[15] & 0x80){big_comp2(b_c,b);}
+	else{big_shl(b_c,b,0);}
+	
     
     big_val(res, 0);
     for(atual=0;atual<16;atual++){
-        if(b[atual]&0x01){big_shl(shi,a,0+atual*mod);big_sum(res,res,shi);}
-        if(b[atual]&0x02){big_shl(shi,a,1+atual*mod);big_sum(res,res,shi);}
-        if(b[atual]&0x04){big_shl(shi,a,2+atual*mod);big_sum(res,res,shi);}
-        if(b[atual]&0x08){big_shl(shi,a,3+atual*mod);big_sum(res,res,shi);}
-        if(b[atual]&0x10){big_shl(shi,a,4+atual*mod);big_sum(res,res,shi);}
-        if(b[atual]&0x20){big_shl(shi,a,5+atual*mod);big_sum(res,res,shi);}
-        if(b[atual]&0x40){big_shl(shi,a,6+atual*mod);big_sum(res,res,shi);}
-        if(b[atual]&0x80){big_shl(shi,a,7+atual*mod);big_sum(res,res,shi);}
+        if(b_c[atual]&0x01){big_shl(shi,a,0+atual*mod);big_sum(res,res,shi);}
+        if(b_c[atual]&0x02){big_shl(shi,a,1+atual*mod);big_sum(res,res,shi);}
+        if(b_c[atual]&0x04){big_shl(shi,a,2+atual*mod);big_sum(res,res,shi);}
+        if(b_c[atual]&0x08){big_shl(shi,a,3+atual*mod);big_sum(res,res,shi);}
+        if(b_c[atual]&0x10){big_shl(shi,a,4+atual*mod);big_sum(res,res,shi);}
+        if(b_c[atual]&0x20){big_shl(shi,a,5+atual*mod);big_sum(res,res,shi);}
+        if(b_c[atual]&0x40){big_shl(shi,a,6+atual*mod);big_sum(res,res,shi);}
+        if(b_c[atual]&0x80){big_shl(shi,a,7+atual*mod);big_sum(res,res,shi);}
     }
+    if(b[15] & 0x80){big_comp2(res,res);}
     return;
 }
 
@@ -162,64 +152,98 @@ void big_mul(BigInt res, BigInt a, BigInt b){
 /* Operações de Deslocamento */
 
 /* res = a << n */
-void big_shl(BigInt res, BigInt a, int n){
+/*void big_shl(BigInt res, BigInt a, int n){
 	int i, e, ant = 0;
 	long val;
 
 	for(i = 0; i < 16; i ++){
-		val = a[i];
+		res[i] = a[i];
+
+	}
+
+	while(n>32){
+		n-=32;
+		big_shl(res,res,32);
+	}
+
+	for(i = 0 && n>0; i < 16; i ++){
+		val = res[i];
 		for(e=0;e<n;e++){val = val*2;}
 		val+=ant;
 		res[i] = val%256;
 		ant = val/256;
 	}
 	return;
+}*/
+void big_shl(BigInt res, BigInt a, int n){
+	int i, c=0;
+	char ant = 0;
+	short val;
+
+	if(n>=8){c=n/8;n=n%8;}
+
+	for(i = c;i < 16; i++){
+		res[i] = a[i-c];
+	}
+	for(i = 0;i < c; i++){
+		res[i] = 0x00;
+	}
+	if(n == 0){return;}
+
+	for(i = 0; i < 16; i ++){
+		val = (res[i]<<n) + ant;
+		res[i] = val;
+		ant = val>>8;
+	}
+	return;
 }
 
 /* res = a >> n (lógico)*/
 void big_shr(BigInt res, BigInt a, int n){
-	shiftR(res, a, n);
-	if(n%8 == 0)
-		return;
 	int i, e, ant = 0, prox = 0;
 	unsigned char val;
+
+	shiftR(res, a, n);
+	if((n&0x07) == 0)
+		return;
+
 	for(i = 15; i >= 0	; i --){
 		val = res[i];
-		for(e=0;e<n%8;e++){
-			prox += (val%2)*pot(2,7-e);
-			//printf("valor do prox %d : %d\n", i, prox);
+		for(e=0;e<(n&0x07);e++){
+			prox += (val&0x01)<<(7-e);
 			val = val>>1;
 		}
-		val = val | ant;
-		res[i] = val;  
-		ant = prox/(pot(2,(n%8)-1));
-		prox = 0;
+	val = val | ant;
+	res[i] = val;  
+	ant = prox>>((n&0x07)-1); 
+	prox = 0;
 
  }
 }
 
 /* res = a >> n (aritmético)*/
 void big_sar(BigInt res, BigInt a, int n){
+	int i, e, ant = 0, prox = 0;
+	unsigned char val;
 	if(a[15] & 0x80){
 		shiftR(res, a, n);
-			if(n%8 == 0){
-				placeBits(res, n);
-				return;
+		if((n&0x07) == 0){
+			placeBits(res, n);
+			return;
 			}
-		int i, e, ant = 0, prox = 0;
-		unsigned char val;
+
 		for(i = 15; i >= 0	; i --){
 			val = res[i];
-			for(e=0;e<n%8;e++){
-				prox += (val%2)*pot(2,7-e);
+			for(e=0;e<(n&0x07);e++){
+				prox += (val&0x01)<<(7-e);
 				val = val>>1;
 			}
 			val = val | ant;
 			res[i] = val;  
-			ant = prox/(pot(2,(n%8)-1));
+			ant = prox>>((n&0x07)-1);
 			prox = 0;
 
- 			}
+	 		}
  			placeBits(res, n);
 	}
 	else{

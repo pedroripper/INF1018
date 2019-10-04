@@ -13,17 +13,16 @@ int main(void){
 	BigInt res; // Variavel resposta
 	
 	/*Variaveis Teste*/
-	BigInt mulA = {0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-	BigInt mulB = {0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};\
 	BigInt subA = {0x80, 0x04, 0x00, 0x00, 0x00, 0x00, 0x90, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 	BigInt subB = {0x70, 0x03, 0x00, 0x00, 0x00, 0x00, 0x90, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 	BigInt one = {0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-	BigInt neg5 = {0xFB, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 	BigInt negA = {0xAE, 0x01, 0x11, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80};
 	BigInt a = {0xAE, 0x01, 0x11, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 	BigInt sumA = {0x01, 0x01, 0x01, 0x01, 0x11, 0x80, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 	BigInt sumB = {0x01, 0x01, 0x01, 0x01, 0x11, 0x80, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-
+	BigInt mulA = {0xFA, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+	BigInt mulB = {0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+	BigInt mulC = {0xFB, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
 	//Teste de big_val
 	printf("TESTE DE big_val:\n");
@@ -37,16 +36,31 @@ int main(void){
 	printf("Extendido para 128 bits:\n");
 	printRes(res);
 
+
 	printf("\n\n\n");
 	printf("/***************************/\n");
 	printf("\n\n\n");
+
 
 	//Teste de big_shl
 	printf("TESTE DE big_shl:\n");
 	printf("Valor de 'a':\n");
 	printRes(a);
-	printf("SHIFT LEFT 16:\n");
-	big_shl(res, a, 16);
+	printf("SHIFT LEFT 1:\n");
+	big_shl(res, a, 1);
+	printRes(res);
+
+	printf("\n");
+	printf("Valor de 'a':\n");
+	printRes(a);
+	printf("SHIFT LEFT 7:\n");
+	big_shl(res, a, 7);
+	printRes(res);
+	printf("SHIFT LEFT 64:\n");
+	big_shl(res, a, 64);
+	printRes(res);
+	printf("SHIFT LEFT 128:\n");
+	big_shl(res, a, 128);
 	printRes(res);
 
 
@@ -61,26 +75,32 @@ int main(void){
 	printf("SHIFT RIGHT LOGICO 7:\n");
 	big_shr(res, a, 7);
 	printRes(res);
-
+	printf("SHIFT RIGHT LOGICO 16:\n");
+	big_shr(res, a, 16);
+	printRes(res);
+	printf("SHIFT RIGHT LOGICO 128:\n");
+	big_shr(res, a, 128);
+	printRes(res);
 
 
 	printf("\n\n\n");
 	printf("/***************************/\n");
 	printf("\n\n\n");
+
 
 	//Teste de big_sar
 	printf("TESTE DE big_sar:\n");
 	printf("Valor de 'a':\n");
 	printRes(negA);
-	printf("SHIFT RIGHT ARITMETICO 16:\n");
-	big_sar(res, negA, 16);
+	printf("SHIFT RIGHT ARITMETICO 15:\n");
+	big_sar(res, negA, 15);
 	printRes(res);
-
 
 
 	printf("\n\n\n");
 	printf("/***************************/\n");
 	printf("\n\n\n");
+
 
 	//Teste de big_comp2
 	printf("TESTE DE big_comp2:\n");
@@ -91,19 +111,28 @@ int main(void){
 	printRes(res);
 
 
-
 	printf("\n\n\n");
 	printf("/***************************/\n");
 	printf("\n\n\n");
+
 
 	printf("TESTE DE big_sum:\n");
 	printf("Valor de 'a':\n");
 	printRes(sumA);
 	printf("Valor de 'b':\n");
 	printRes(sumB);
+	printf("RES:\n");
 	big_sum(res, sumA, sumB);
 	printRes(res);
 
+	printf("TESTE DE big_sum:\n");
+	printf("Valor de 'a':\n");
+	printRes(sumA);
+	printf("Valor de 'b':\n");
+	printRes(negA);
+	printf("RES:\n");
+	big_sum(res, sumA, negA);
+	printRes(res);
 
 
 
@@ -117,23 +146,47 @@ int main(void){
 	printf("Valor de 'b':\n");
 	printRes(subB);
 	big_sub(res, subA, subB);
+	printf("RES: :\n");
 	printRes(res);
-
-
 
 
 	printf("\n\n\n");
 	printf("/***************************/\n");
 	printf("\n\n\n");
 
-	printf("TESTE DE big_mul:\n");
-	printf("Valor de 'a':\n");
-	printRes(mulA);
-	printf("Valor de 'b':\n");
-	printRes(mulB);
-	big_mul(res, mulA, mulB);
-	printRes(res);
 
+	printf("TESTE DE big_vmul:\n");
+	printf("BigInt: %02d\n", 250);
+	printRes(mulA);
+	printf("BigInt: %02d\n", 3);
+	printRes(mulB);
+	printf("big_vmul: ");
+	big_mul(res,mulA,mulB);
+	printRes(res);
+	
+	printf("\nBigInt: %02d\n", -5);
+	printRes(mulC);
+	printf("BigInt: %02d\n", 3);
+	printRes(mulB);
+	printf("big_vmul: ");
+	big_mul(res,mulC,mulB);
+	printRes(res);
+	
+	printf("\nBigInt: %02d\n", 250);
+	printRes(mulA);
+	printf("BigInt: %02d\n", -5);
+	printRes(mulC);
+	printf("big_vmul: ");
+	big_mul(res,mulA,mulC);
+	printRes(res);
+	
+	printf("\nBigInt: %02d\n", -5);
+	printRes(mulC);
+	printf("BigInt: %02d\n", -5);
+	printRes(mulC);
+	printf("big_vmul: ");
+	big_mul(res,mulC,mulC);
+	printRes(res);
 
 
 	return 0;
