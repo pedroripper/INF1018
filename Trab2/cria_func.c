@@ -34,7 +34,12 @@ static unsigned char movlr3[] = {0x41, 0x8b, 0x10}; /* movl (%r8), %edx */
 static unsigned char movqr3[] = {0x49, 0x8b, 0x10}; /* movq (%r8), %rdx */
 static unsigned char movq3[] = {0x48, 0xc7, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}; /* movq $l, %rdx */
 
-
+static unsigned char movl12[] = {0x89, 0xf7}; /*movl %esi, %edi*/
+static unsigned char movq12[] = {0x48, 0x49, 0xf7}; /*movq %rsi, %rdi*/
+static unsigned char movl32[] = {0x89, 0xd6}; /*movl %edx , %esi*/
+static unsigned char movq32[] = {0x48, 0x49, 0xd6}; /*movq %rdx, %rsi*/
+static unsigned char movl13[] = {0x89, 0xd7}; /*movl %edx, %edi*/
+static unsigned char movq13[] = {0x48, 0x89, 0xd7}; /*movq %rdx, %rdi*/
 
 
 
@@ -97,7 +102,16 @@ void* cria_func (void* f, DescParam params[], int n){
 //Dois parametros
 	if(n > 1) {
 		if(params[1].tipo_val == INT_PAR){printf("int\n");
-      	  if(params[1].orig_val == PARAM){printf("int_PARAM\n");/*faz nada*/}
+      		if(params[1].orig_val == PARAM){
+		printf("int_PARAM\n");
+		if(params[0].orig_val != PARAM) {
+			memcpy(p, movl12, sizeof(movl12));
+			p += sizeof(movl12);
+		}		
+	  
+  
+	  }
+	  
        		 else{
             if(params[1].orig_val== FIX){printf("int_FIX\n");
                 int i = params[1].valor.v_int;
@@ -116,7 +130,20 @@ void* cria_func (void* f, DescParam params[], int n){
         }
     }
     else{
-        if(params[1].orig_val == PARAM){printf("int_PARAM\n");/*faz nada*/}
+        if(params[1].orig_val == PARAM){
+		
+		printf("int_PARAM\n");
+	
+		if(params[0].orig_val != PARAM) {
+			memcpy(p, movq12, sizeof(movq12));
+			p += sizeof(movq12);
+		}		
+	  
+	  
+	 
+
+	
+	}
 		else{
        	  	 if(params[1].orig_val == FIX){
          	 printf("int_FIX\n");
@@ -126,8 +153,7 @@ void* cria_func (void* f, DescParam params[], int n){
                 p+=sizeof(movq2);
 		}
 
-		
-                      else{/*codigo += "movq ('params[0].valor.v_ptr'), %rdi";*/
+                else{/*codigo += "movq ('params[0].valor.v_ptr'), %rdi";*/
                 printf("int_IND\n");
                 unsigned long l = (unsigned long) params[1].valor.v_ptr;
                 memcpy(&movlp[2],(unsigned char*) &l,sizeof(l));
@@ -144,7 +170,23 @@ void* cria_func (void* f, DescParam params[], int n){
 
 	if(n > 2) {
 		if(params[2].tipo_val == INT_PAR){printf("int\n");
-      	  if(params[2].orig_val == PARAM){printf("int_PARAM\n");/*faz nada*/}
+      	  if(params[2].orig_val == PARAM){
+		  
+		  printf("int_PARAM\n");
+			 if(params[0].orig_val != PARAM && params[1].orig_val != PARAM) {
+			memcpy(p, movl13, sizeof(movl13));
+			p += sizeof(movl13);
+		 }	
+		 else {
+			//segunda checagem
+		 	if(params[0].orig_val != PARAM || params[1].orig_val != PARAM) {
+			memcpy(p, movl32, sizeof(movl32));
+			p += sizeof(movl32);
+		 }
+		
+		 } 
+		  
+		 }
        		 else{
             if(params[2].orig_val== FIX){printf("int_FIX\n");
                 int i = params[2].valor.v_int;
@@ -163,7 +205,26 @@ void* cria_func (void* f, DescParam params[], int n){
         }
     }
     else{
-        if(params[0].orig_val == PARAM){printf("int_PARAM\n");/*faz nada*/}
+        if(params[0].orig_val == PARAM){
+		
+		
+		printf("int_PARAM\n");
+				 if(params[0].orig_val != PARAM && params[1].orig_val != PARAM) {
+			memcpy(p, movq13, sizeof(movq13));
+			p += sizeof(movq13);
+		 }	
+		 else {
+			//segunda checagem
+		 	if(params[0].orig_val != PARAM || params[1].orig_val != PARAM) {
+			memcpy(p, movq32, sizeof(movq32));
+			p += sizeof(movq32);
+		 }
+		
+		
+		/*faz nada*/
+		}
+
+	}
 		else{
        	  	 if(params[0].orig_val == FIX){
          	 printf("int_FIX\n");
